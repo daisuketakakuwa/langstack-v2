@@ -104,9 +104,7 @@ const addKeywordCondition = (keyword: string) => {
 };
 
 const addGenreIdCondition = (genreId: string) => {
-  console.log("HELLO");
   if (!genreId) return {};
-  console.log("HELLO2");
   return {
     genre_id: { equals: genreId },
   };
@@ -139,7 +137,6 @@ app.get("/cards", async (req, res) => {
   const genreId = req.query.genreId as string;
   const fromDate = req.query.fromDate as string;
   const toDate = req.query.toDate as string;
-  console.log("★" + genreId);
   const cards = await prisma.card.findMany({
     // JOIN
     include: {

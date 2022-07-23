@@ -26,8 +26,7 @@ const RevisePage = (): JSX.Element => {
   const [genres, setGenres] = useState([] as Genre[]);
   const [posts, setPosts] = useState([] as Post[]);
   // page layout state
-  const [searched, setSearched] = useState(false);
-  const [index, setIndex] = useState(1);
+  const [index, setIndex] = useState(0);
 
   const search = async () => {
     await axios
@@ -44,7 +43,6 @@ const RevisePage = (): JSX.Element => {
       .catch((err) => {
         alert("SEARCH ERROR...");
       });
-    setSearched(true);
   };
 
   useEffect(() => {
@@ -52,6 +50,10 @@ const RevisePage = (): JSX.Element => {
       setGenres(res.data.genres);
     });
   }, []);
+
+  useEffect(() => {
+    setIndex(0);
+  }, [posts]);
 
   return (
     <RevisePageBox>
@@ -84,9 +86,9 @@ const RevisePage = (): JSX.Element => {
       </GenreSelectBox>
       <SearchButton onClick={() => search()}>SEARCH</SearchButton>
       <h1 style={{ textAlign: "center" }}>
-        {index}/{posts.length}
+        {index + 1}/{posts.length}
       </h1>
-      <SwipeableViews onChangeIndex={(index) => setIndex(index + 1)}>
+      <SwipeableViews index={index} onChangeIndex={(i) => setIndex(i)}>
         {posts.map((post) => (
           <PostCard key={post.id}>
             <PostCardItem fontSize={15} fontFamily={100}>
