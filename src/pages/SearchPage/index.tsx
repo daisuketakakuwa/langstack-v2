@@ -4,24 +4,26 @@ import {
   KeywordTextBoxFrame,
   SearchButton,
   SearchPageTitle,
+  SearchPageBox,
 } from "./SearchPageStyle";
 import PostSection, { Post } from "../HomePage/PostSection";
 import axios from "../../infras/AxiosFactory";
+import { Genre } from "../PostPage/GenreSelect";
+import { GenreSelectBox } from "../PostPage/GenreSelect/GenreSelectStyle";
 
 const SearchPage = (): JSX.Element => {
   const [posts, setPosts] = useState([] as Post[]);
   const [keyword, setKeyword] = useState("");
   const [searched, setSearched] = useState(false);
+  const [genres, setGenres] = useState([] as Genre[]);
+  const [selectedGenre, setSelectedGenre] = useState("");
 
   const search = async () => {
-    if (keyword === "") {
-      alert("FILL OUT KEYWORD");
-      return;
-    }
     await axios
       .get("/cards", {
         params: {
           keyword,
+          genreId: selectedGenre,
         },
       })
       .then((res) => {
@@ -43,19 +45,38 @@ const SearchPage = (): JSX.Element => {
     }
   };
 
+  useEffect(() => {
+    axios.get("/genres").then((res) => {
+      setGenres(res.data.genres);
+    });
+  }, []);
+
   return (
-    <React.Fragment>
+    <SearchPageBox>
       <SearchPageTitle>KEYWORD</SearchPageTitle>
+      <KeywordTextBox
+        value={keyword}
+        onChange={(e) => setKeyword(e.target.value)}
+      />
+      <SearchPageTitle>GENRE</SearchPageTitle>
+      <GenreSelectBox
+        name="genres"
+        onChange={(e) => setSelectedGenre(e.target.value)}
+        width="100%"
+      >
+        <option value="" />
+        {genres.map((genre) => (
+          <option key={genre.id} value={genre.id}>
+            {genre.name}
+          </option>
+        ))}
+      </GenreSelectBox>
       <KeywordTextBoxFrame>
-        <KeywordTextBox
-          value={keyword}
-          onChange={(e) => setKeyword(e.target.value)}
-        />
         <SearchButton onClick={() => search()}>SEARCH</SearchButton>
       </KeywordTextBoxFrame>
       <SearchPageTitle>SEARCH RESULT</SearchPageTitle>
       {switchSearchResult()}
-    </React.Fragment>
+    </SearchPageBox>
   );
 };
 

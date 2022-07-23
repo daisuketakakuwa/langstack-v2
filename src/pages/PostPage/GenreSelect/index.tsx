@@ -39,6 +39,7 @@ const switchGenreInputField = (
     <GenreSelectBox
       name="genres"
       onChange={(e) => setSelectedGenre(e.target.value)}
+      width="70%"
     >
       <option value="" />
       {genres.map((genre) => (

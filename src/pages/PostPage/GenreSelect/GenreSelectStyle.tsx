@@ -1,9 +1,13 @@
 import styled from "styled-components";
 
+type GenreSelectBox = {
+  width: string;
+};
+
 export const GenreSelectBox = styled.select`
   font-size: 20px;
   height: 30px;
-  width: 70%;
+  width: ${(props: GenreSelectBox) => props.width};
 `;
 
 export const GenreTextBox = styled.input`
