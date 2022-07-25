@@ -165,8 +165,6 @@ app.get("/cards", async (req, res) => {
   res.json({ cards });
 });
 
-// 両方指定されていたら、AND と ORの組み合わせやな
-
 app.post("/cards", async (req, res) => {
   // create genre if not exist
   let targetGenre;
@@ -194,6 +192,19 @@ app.post("/cards", async (req, res) => {
       content: req.body.content,
       genre_id: req.body.genreId || targetGenre?.id,
       post_date: new Date(),
+    },
+  });
+  res.json({ card });
+});
+
+app.put("/cards", async (req, res) => {
+  const card = await prisma.card.update({
+    where: {
+      id: req.body.id,
+    },
+    data: {
+      title: req.body.title,
+      content: req.body.content,
     },
   });
   res.json({ card });

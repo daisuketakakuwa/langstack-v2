@@ -40,6 +40,12 @@ const HomePage = (): JSX.Element => {
     });
   }, []);
 
+  const handleAfterUpdateProps = async () => {
+    axios.get("/recent-posts").then((res) => {
+      setPosts(res.data.cards);
+    });
+  };
+
   const switchComponent = (
     isFetchTotalCountDone: boolean,
     isFetchActivitiesDone: boolean,
@@ -65,7 +71,10 @@ const HomePage = (): JSX.Element => {
           <SectionTitle>ACTIVITY</SectionTitle>
           <ActivitySection activities={activities} />
           <SectionTitle>RECENT POSTS</SectionTitle>
-          <PostSection posts={posts} />
+          <PostSection
+            posts={posts}
+            handleAfterUpdateProps={handleAfterUpdateProps}
+          />
         </React.Fragment>
       );
     }

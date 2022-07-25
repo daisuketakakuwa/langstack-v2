@@ -7,6 +7,8 @@ import SearchPage from "./pages/SearchPage";
 import RevisePage from "./pages/RevisePage";
 import { AppStyled, MainBox } from "./AppStyles";
 
+import "bootstrap/dist/css/bootstrap.min.css";
+
 const App = () => {
   return (
     <AppStyled>

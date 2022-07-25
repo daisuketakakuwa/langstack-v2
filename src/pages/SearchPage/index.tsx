@@ -32,7 +32,15 @@ const SearchPage = (): JSX.Element => {
       .catch((err) => {
         alert("SEARCH ERROR...");
       });
+  };
+
+  const handleSearch = async () => {
+    await search();
     setSearched(true);
+  };
+
+  const handleAfterUpdateProps = async () => {
+    await search();
   };
 
   const switchSearchResult = (): JSX.Element => {
@@ -41,7 +49,12 @@ const SearchPage = (): JSX.Element => {
     } else if (posts.length === 0) {
       return <h3 style={{ textAlign: "center" }}>NO POSTS MATCHED</h3>;
     } else {
-      return <PostSection posts={posts} />;
+      return (
+        <PostSection
+          posts={posts}
+          handleAfterUpdateProps={handleAfterUpdateProps}
+        />
+      );
     }
   };
 
@@ -72,7 +85,7 @@ const SearchPage = (): JSX.Element => {
         ))}
       </GenreSelectBox>
       <KeywordTextBoxFrame>
-        <SearchButton onClick={() => search()}>SEARCH</SearchButton>
+        <SearchButton onClick={() => handleSearch()}>SEARCH</SearchButton>
       </KeywordTextBoxFrame>
       <SearchPageTitle>SEARCH RESULT</SearchPageTitle>
       {switchSearchResult()}
