@@ -3,12 +3,6 @@ import axios from "../../infras/AxiosFactory";
 import SwipeableViews from "react-swipeable-views";
 import { Post } from "../HomePage/PostSection";
 import {
-  ContentSection,
-  PostCard,
-  PostCardItem,
-  PostSectionBar,
-} from "../HomePage/PostSection/PostSectionStyle";
-import {
   DateInputStyled,
   FlexBox,
   RevisePageBox,
@@ -17,6 +11,8 @@ import {
 } from "./RevisePageStyle";
 import { GenreSelectBox } from "../PostPage/GenreSelect/GenreSelectStyle";
 import { Genre } from "../PostPage/GenreSelect";
+import PostModal from "../../components/PostModal";
+import PostCard from "../../components/PostCard";
 const RevisePage = (): JSX.Element => {
   // condition state
   const [fromDate, setFromDate] = useState("");
@@ -27,6 +23,19 @@ const RevisePage = (): JSX.Element => {
   const [posts, setPosts] = useState([] as Post[]);
   // page layout state
   const [index, setIndex] = useState(0);
+
+  const [modalPost, setModalPost] = useState({} as Post);
+  const [showModal, setShowModal] = useState(false);
+
+  const openModal = (post: Post) => {
+    setModalPost(post);
+    setShowModal(true);
+  };
+  const closeModal = () => setShowModal(false);
+  const handleAfterUpdate = async () => {
+    setShowModal(false);
+    // await search();
+  };
 
   const search = async () => {
     await axios
@@ -39,9 +48,11 @@ const RevisePage = (): JSX.Element => {
       })
       .then((res) => {
         setPosts(res.data.cards);
+        setIndex(0);
       })
       .catch((err) => {
         alert("SEARCH ERROR...");
+        setIndex;
       });
   };
 
@@ -90,20 +101,15 @@ const RevisePage = (): JSX.Element => {
       </h1>
       <SwipeableViews index={index} onChangeIndex={(i) => setIndex(i)}>
         {posts.map((post) => (
-          <PostCard key={post.id}>
-            <PostCardItem fontSize={15} fontFamily={100}>
-              投稿日時：{post.post_date.substring(0, 10)}
-              <br />
-              ジャンル：{post.genre.name}
-            </PostCardItem>
-            <PostCardItem fontSize={20} fontFamily={800}>
-              {post.title}
-            </PostCardItem>
-            <PostSectionBar />
-            <ContentSection>{post.content}</ContentSection>
-          </PostCard>
+          <PostCard key={post.id} post={post} handleOpenModal={openModal} />
         ))}
       </SwipeableViews>
+      <PostModal
+        post={modalPost}
+        showModal={showModal}
+        handleClose={closeModal}
+        handleAfterUpdate={handleAfterUpdate}
+      />
     </RevisePageBox>
   );
 };
